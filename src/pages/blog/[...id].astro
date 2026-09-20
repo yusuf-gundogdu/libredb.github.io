@@ -171,6 +171,10 @@ const schema = [
   </article>
 </BaseLayout>
 
+<script>
+  import '../../scripts/code-copy';
+</script>
+
 <style>
   .post__inner {
     padding-block: clamp(var(--space-09), 6vh, 72px) clamp(var(--section-y-desktop), 10vh, 112px);
@@ -266,6 +270,50 @@ const schema = [
     width: 100%;
     border-radius: var(--radius-2xl);
     border: var(--border-width-1) solid var(--border);
+  }
+
+  /* The button sits inside the <pre> rather than in a wrapper: a wrapper would
+     sit between the prose rules and the block, and the margins they set on
+     adjacent elements would stop applying. */
+  .post__body :global(pre.has-codecopy) {
+    position: relative;
+  }
+  .post__body :global(.codecopy) {
+    position: absolute;
+    top: var(--space-03);
+    right: var(--space-03);
+    padding: var(--space-02) var(--space-03);
+    border: var(--border-width-1) solid var(--console-border, var(--border));
+    border-radius: var(--radius-sm);
+    background: var(--console-bg, var(--surface));
+    color: var(--console-text-tertiary, var(--text-tertiary));
+    font: var(--weight-medium) 11.5px / 1 var(--font-mono);
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity 120ms ease,
+      color 120ms ease,
+      border-color 120ms ease;
+  }
+  /* Revealed on hover for the mouse, and always present for keyboard and touch —
+     an affordance that only exists on hover does not exist on a phone. */
+  .post__body :global(pre:hover .codecopy),
+  .post__body :global(.codecopy:focus-visible),
+  .post__body :global(.codecopy.is-copied),
+  .post__body :global(.codecopy.is-copyfailed) {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .post__body :global(.codecopy) {
+      opacity: 1;
+    }
+  }
+  .post__body :global(.codecopy:hover) {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+  .post__body :global(.codecopy.is-copied) {
+    color: var(--text-brand, var(--text-primary));
   }
 
   .post__grid {
